@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" id="navbar-brand" href="/" title="To mainpage">LunchTime</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+
+        {% for restaurant in restaurants%}
+          {% if restaurant.is_active %}
+        <li class="nav-item"
+          {% if request.resolver_match.kwargs.restaurant_id == restaurant.id %}
+              title="current: {{restaurant.name}}"
+          {% endif %}>
+          <strong>
+            <a class="nav-link"
+               {% if request.resolver_match.kwargs.restaurant_id == restaurant.id %}
+                  id="active"
+               {% endif %}
+               href="{% url 'restaurant:menu' restaurant.id %}">
+              {{ restaurant.name|title }}
+            </a>
+          </strong>
+        </li>
+          {% endif %}
+		{% endfor %}
+
+      </ul>
+    </div>
+  </div>
+</nav>

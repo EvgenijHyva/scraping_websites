@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+<section class="container">
+	{% for restaurant in restaurants %}
+		{% if restaurant.is_active %}
+	<div class="restaurant-container">
+		<h4> {{ restaurant.name }} </h4>
+		<p>{{ restaurant.address|title }}</p>
+		<a href="{{ restaurant.url }}" target="_blank" title="Direct link to restaurant">
+			Direct link to restaurant
+			<i class="fas fa-arrow-right"></i>
+		</a>
+	</div>
+		{% endif %}
+	{% endfor %}
+</section>
+
+{% endblock %}
+

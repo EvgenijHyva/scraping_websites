@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block body %}
+<section class="container menu" >
+	<div class="menu-block" id="{{menu.restaurant.name}}">
+		<p><strong>Today is {% now "l"%}</strong></p>
+		<div class="dish">
+			<p><strong>Main menu:</strong></p>
+			{% for dish in menu.dishes_as_list %}
+			<p><span> {{ dish }}</span></p>
+			{% endfor %}
+			<p><strong> Lunch price {{ menu.price }}</strong></p>
+		</div>
+		<div class="info">
+			{% for info in menu.additional_info_as_list %}
+			<p><span>{{ info }}</span></p>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+</section>
+{% endblock %}

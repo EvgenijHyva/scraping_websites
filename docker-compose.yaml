@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  redis:
+    container_name: lunchtime_redis_server
+    image: redis
+    restart: always
+    environment:
+      - TZ=Europe/Helsinki
+
+  lunchtime:
+    restart: always
+    container_name: lunchtime_app
+    build:
+      context: ./code
+    ports:
+    - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1
+      - CELERY_BROKER=redis://redis:6379/0
+    volumes:
+      - ./code/Lunchtime/db.sqlite3:/app/Lunchtime/db.sqlite3
+      - ./code/Lunchtime:/app/Lunchtime
+    command: [ "python3", "./Lunchtime/manage.py", "runserver", "0.0.0.0:8000"]
+    depends_on:
+      - celery
+      - worker
+
+  celery:
+    restart: always
+    container_name: celery_scheduler
+    build:
+      context: ./code
+    volumes:
+      - ./code/Lunchtime:/app/Lunchtime
+    depends_on:
+      - redis
+    command: [ "celery", "--workdir=./Lunchtime", "-A", "Lunchtime", "beat", "-l", "INFO" ]
+
+
+  worker:
+    container_name: celery_worker
+    restart: always
+    build:
+      context: ./code
+    volumes:
+      - ./code/Lunchtime:/app/Lunchtime
+    command: [ "celery", "--workdir=./Lunchtime", "-A", "Lunchtime", "worker", "--pool=solo", "-l", "INFO", "-P", "threads" ]
+    depends_on:
+      - celery
+      - redis
