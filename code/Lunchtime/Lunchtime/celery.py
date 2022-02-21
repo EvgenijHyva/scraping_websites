@@ -16,21 +16,11 @@ app.conf.update(timezone='Europe/Helsinki')
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
-app.config_from_object(settings, namespace='CELERY') #'django.conf:settings'
+app.config_from_object(settings, namespace='CELERY')  #'django.conf:settings'
 
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {
-    "run-scrapy-every-monday": {
-        "task": "parsers_app.tasks.run_scrapy_task",
-        "schedule": crontab(day_of_week=1, hour=1)
-    },
-    "run-scrapy-demo": {
-        "task": "parsers_app.tasks.run_scrapy_task",
-        "schedule": crontab(minute="*/5")
-    },
-}
 # database beat
 # celery -A Lunchtime beat -l INFO
 # +
@@ -41,6 +31,15 @@ def debug_task(self):
     print(f'Request: {self.request!r}')
 
 
+app.conf.beat_schedule = {
+    "run-scrapy-every-monday": {
+        "task": "parsers_app.tasks.run_scrapy_task",
+        "schedule": crontab(day_of_week=1, hour=1)
+    },
+    "run-scrapy-demo": {
+        "task": "parsers_app.tasks.run_scrapy_task",
+        "schedule": crontab(minute="*/5")
+    },
 
-
+}
 

@@ -28,9 +28,11 @@ class MenuScrapersPipeline(object):
         except IntegrityError as e:
             restaurant = Restaurants.objects.get(name=_restaurant["name"])
             Errors.objects.create(target=restaurant, error_text=e)
-
-        menu, menu_created = RestaurantMenu.objects.get_or_create(restaurant=restaurant, **item)
-        logging.info(f"created instance - {menu}")
+        if restaurant and restaurant.is_active:
+            menu, menu_created = RestaurantMenu.objects.get_or_create(restaurant=restaurant, **item)
+            logging.info(f"created instance - {menu}")
+        else:
+            logging.warning("Restaurant not active")
         return item
 
     def close_spider(self, spider):

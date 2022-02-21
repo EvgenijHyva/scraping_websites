@@ -11,8 +11,9 @@ class Scraper:
 
 
     def run_spiders(self):
-        for spider in self.spiders:
-            self.process.crawl(spider)
-        self.process.start()
+        if len(self.spiders):
+            for spider in self.spiders:
+                self.process.crawl(spider)
+            self.process.start()
 
 
