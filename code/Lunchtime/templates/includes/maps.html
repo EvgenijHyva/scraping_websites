@@ -1,3 +1,39 @@
-{% if restaurants%}
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAc8dWU_xCj3ui0a7r3c4b56CeaRn2SAYs"></script>
-{% endif %}
+<script src='https://oskari.org/js/rpc/rpc-client.min.js'></script>
+<script>
+ window.onload = function() {
+    let iframes = document.getElementsByTagName("iframe")
+	for (let i = 0; i < iframes.length; i++) {
+		let regularExpression = /(-\s?\d+\s?(\w+)?)/
+        let address = iframes[i].getAttribute("data-address").replace(regularExpression, "")
+        //console.log(address)
+        let id = iframes[i].getAttribute("id")
+		let pk = iframes[i].getAttribute("data-id")
+
+		let IFRAME_DOMAIN = 'https://kartta.paikkatietoikkuna.fi';
+	    let iFrame = document.getElementById(id);
+	    let channel = OskariRPC.connect(
+	        iFrame,
+	        IFRAME_DOMAIN
+	    );
+	    channel.onReady(function() {
+	        //channel is now ready and listening.
+	        channel.log('Map is now listening');
+	    });
+	    channel.postRequest('SearchRequest', [address]);
+	    let MARKER_ID = pk
+	    let zoomOut = 9 // adjust 1-13
+	    channel.handleEvent("SearchResultEvent", function(data) {
+	        let marker = {
+	            x:data.result.locations[0].lon,
+	            y:data.result.locations[0].lat,
+	            color: 'ff0000',
+	            msg : id,
+	            shape: 3, // icon number (0-6)
+	            size: 3
+	        }
+	      channel.postRequest('MapModulePlugin.AddMarkerRequest', [marker, MARKER_ID]);
+	      channel.postRequest("MapMoveRequest", [marker.x, marker.y, zoomOut ])
+	    })
+	}
+ }
+</script>

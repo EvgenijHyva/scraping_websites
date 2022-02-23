@@ -4,17 +4,27 @@
 <section class="container">
 	{% for restaurant in restaurants %}
 		{% if restaurant.is_active %}
-	<div class="restaurant-container">
-		<h4> {{ restaurant.name }} </h4>
-		<p>{{ restaurant.address|title }}</p>
-		<a href="{{ restaurant.url }}" target="_blank" title="Direct link to restaurant">
-			Direct link to restaurant
-			<i class="fas fa-arrow-right"></i>
-		</a>
-	</div>
+		{% include "includes/maps.html" %}
+		<div class="restaurant-container">
+			<div class="main-info">
+				<h4> {{ restaurant.name }} </h4>
+				<p>{{ restaurant.address|title }}</p>
+				<a href="{{ restaurant.url }}" target="_blank" title="Direct link to restaurant">
+					Direct link to restaurant
+					<i class="fas fa-arrow-right"></i>
+				</a>
+			</div>
+			{% if restaurant.address %}
+			<iframe src="https://kartta.paikkatietoikkuna.fi/published/fi/930be2ec-db47-479e-a755-a5294b9b0ae9"
+	            allow="geolocation" style="border: none; width: 600px; height: 200px;" id="{{restaurant.name}}"
+				data-address="{{restaurant.address}}" data-id="{{restaurant.pk}}"></iframe>
+			{% endif %}
+		</div>
+
 		{% endif %}
 	{% endfor %}
 </section>
+
 
 {% endblock %}
 

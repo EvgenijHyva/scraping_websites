@@ -52,6 +52,8 @@ footer {
     margin: 15px 0;
     box-shadow: 2px 4px 10px 6px #c6d3e5;
     border-radius: 5px;
+    display:flex;
+    justify-content:space-between;
 }
 #active {
     background: #6a9f5563;
@@ -65,4 +67,7 @@ footer {
 .menu-block {
     text-align: center;
     padding: 10px;
+}
+.mobileToolbarDiv {
+    background: transparent;
 }
