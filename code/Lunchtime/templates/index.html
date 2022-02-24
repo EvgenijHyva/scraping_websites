@@ -4,7 +4,6 @@
 <section class="container">
 	{% for restaurant in restaurants %}
 		{% if restaurant.is_active %}
-		{% include "includes/maps.html" %}
 		<div class="restaurant-container">
 			<div class="main-info">
 				<h4> {{ restaurant.name }} </h4>
@@ -15,16 +14,16 @@
 				</a>
 			</div>
 			{% if restaurant.address %}
-			<iframe src="https://kartta.paikkatietoikkuna.fi/published/fi/930be2ec-db47-479e-a755-a5294b9b0ae9"
+			<iframe src="https://kartta.paikkatietoikkuna.fi/published/fi/19532910-5a95-454e-a8c6-aa569f127a16"
 	            allow="geolocation" style="border: none; width: 600px; height: 200px;" id="{{restaurant.name}}"
 				data-address="{{restaurant.address}}" data-id="{{restaurant.pk}}"></iframe>
 			{% endif %}
 		</div>
-
 		{% endif %}
 	{% endfor %}
+	{% if restaurants %}
+		{% include "includes/maps.html" %}
+	{% endif %}
 </section>
-
-
 {% endblock %}
 

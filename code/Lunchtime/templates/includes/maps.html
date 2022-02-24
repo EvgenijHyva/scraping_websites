@@ -4,13 +4,15 @@
     let iframes = document.getElementsByTagName("iframe")
 	for (let i = 0; i < iframes.length; i++) {
 		let regularExpression = /(-\s?\d+\s?(\w+)?)/
-        let address = iframes[i].getAttribute("data-address").replace(regularExpression, "")
-        //console.log(address)
-        let id = iframes[i].getAttribute("id")
-		let pk = iframes[i].getAttribute("data-id")
+		let place = {
+			address: iframes[i].getAttribute("data-address").replace(regularExpression, ""),
+			id: iframes[i].getAttribute("id"),
+			marker_id: iframes[i].getAttribute("data-id")
+		}
+		//console.log(place)
 
 		let IFRAME_DOMAIN = 'https://kartta.paikkatietoikkuna.fi';
-	    let iFrame = document.getElementById(id);
+	    let iFrame = document.getElementById(place["id"]);
 	    let channel = OskariRPC.connect(
 	        iFrame,
 	        IFRAME_DOMAIN
@@ -19,19 +21,18 @@
 	        //channel is now ready and listening.
 	        channel.log('Map is now listening');
 	    });
-	    channel.postRequest('SearchRequest', [address]);
-	    let MARKER_ID = pk
+	    channel.postRequest('SearchRequest', [place["address"]]);
 	    let zoomOut = 9 // adjust 1-13
 	    channel.handleEvent("SearchResultEvent", function(data) {
 	        let marker = {
 	            x:data.result.locations[0].lon,
 	            y:data.result.locations[0].lat,
 	            color: 'ff0000',
-	            msg : id,
+	            msg : place["id"],
 	            shape: 3, // icon number (0-6)
 	            size: 3
 	        }
-	      channel.postRequest('MapModulePlugin.AddMarkerRequest', [marker, MARKER_ID]);
+	      channel.postRequest('MapModulePlugin.AddMarkerRequest', [marker, place["marker_id"]]);
 	      channel.postRequest("MapMoveRequest", [marker.x, marker.y, zoomOut ])
 	    })
 	}

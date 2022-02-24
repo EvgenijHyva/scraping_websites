@@ -1,15 +1,12 @@
 from django.http import HttpResponseRedirect
-
 from django.shortcuts import render
-
 from .models import Restaurants, RestaurantMenu
 from datetime import date
-
 from .tasks import run_scrapy_task
 
 today = date.today()
 
-def manualrun(request):
+def manual_run(request):
     run_scrapy_task.delay()
     return HttpResponseRedirect("/")
 
