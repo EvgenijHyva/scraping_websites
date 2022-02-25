@@ -6,7 +6,9 @@
 		{% if restaurant.is_active %}
 		<div class="restaurant-container">
 			<div class="main-info">
-				<h4> {{ restaurant.name }} </h4>
+				<a class="restaurant" href="{% url 'restaurant:menu' restaurant.id %}">
+					<h4> {{ restaurant.name }} </h4>
+				</a>
 				<p>{{ restaurant.address|title }}</p>
 				<a href="{{ restaurant.url }}" target="_blank" title="Direct link to restaurant">
 					Direct link to restaurant

@@ -1,3 +1,5 @@
+from statistics import median
+
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from random import choice
@@ -23,22 +25,24 @@ class BaseCampSpider(scrapy.Spider):
         )
 
     def parse(self, response):
-        week_days = get_week_tuple(1, 5)
+        self.address = response.xpath(u'normalize-space(//li[@class="footer-sprite address"]/a/text())').get()
+        self.map_url = response.xpath('//li[@class="footer-sprite address"]/a/@href').get()
         week_menu = response.xpath("//ul/div[@class='row']/div/li/a/div/div")
-        day_counter = 0
-        scraped_menu = {}
-        dishes = []
-        for line in week_menu:
-            article = line.xpath("./h4/text()").get()
-            price = line.xpath("./div/b/span/text()").get() + "€"
-            dishes.append({"article": article, "price": price})
-            try:
-                num = int(article[1:2])
-            except ValueError:
-                print("not a number")
-                break
-            if num == 8 and day_counter < len(week_days):
-                scraped_menu.update({week_days[day_counter][1]: dishes})
-                dishes = []
-                day_counter += 1
-        yield scraped_menu
+        days = get_week_tuple(1, 5)
+        for day_num, day in enumerate(days):
+            position_start = day_num * 8  # positions on menu
+            position_end = position_start + 8  # every day 8 lines of menu
+            # raw data extract data in format (price,dish)
+            _raw_data = [(line.xpath("./div/b/span/text()").get(), line.xpath("./h4/text()").get()) for line in
+                         week_menu[position_start:position_end]]
+            # separate values by [(prices),(dishes)],where prices=0 & dishes=1
+            price_dish_unzipped = list(zip(*_raw_data))
+            prices = list(map(float, price_dish_unzipped[0]))
+            scraped_menu = {
+                "day": "%s" % days[day_num][1],
+                "date": days[day_num][0],
+                "dishes": price_dish_unzipped[1],
+                "price": f"around {median(prices)}€",
+                "additional_price": f"{min(prices)}€ - {max(prices)}€"
+            }
+            yield scraped_menu

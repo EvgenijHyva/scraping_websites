@@ -71,3 +71,9 @@ footer {
 .mobileToolbarDiv {
     background: transparent;
 }
+.restaurant {
+    color: black;
+}
+.restaurant:hover {
+    color: green;
+}
