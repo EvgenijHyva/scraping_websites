@@ -14,7 +14,7 @@ from menu_scrapers.crawl_runner import Scraper
 from .models import Restaurants
 
 """Here you can add your new spider names"""
-created_spiders = ["obelix", "kaksipuuta", ]
+created_spiders = ["obelix", "kaksipuuta", ]  # base_camp
 
 def run_scrapy_spiders():
     _spiders = collections.defaultdict(lambda: True)

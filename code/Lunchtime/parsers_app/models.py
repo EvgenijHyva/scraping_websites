@@ -54,11 +54,13 @@ class RestaurantMenu(models.Model):
 
     @property
     def dishes_as_list(self):
-        return list(self.dishes.split("\n"))
+        if self.dishes:
+            return list(self.dishes.split("\n"))
 
     @property
     def additional_info_as_list(self):
-        return list(self.additional_info.split("\n"))
+        if self.additional_info:
+            return list(self.additional_info.split("\n"))
 
     @property
     def to_dict(self):

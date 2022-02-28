@@ -60,8 +60,8 @@ ROBOTSTXT_OBEY = True
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    PATH + 'menu_scrapers.middlewares.MenuScrapersDownloaderMiddleware': 543,
-    #'scrapy_selenium.SeleniumMiddleware': 800
+    #PATH + 'menu_scrapers.middlewares.MenuScrapersDownloaderMiddleware': 543,
+    'scrapy_selenium.SeleniumMiddleware': 800
 }
 
 # Enable or disable extensions
@@ -102,6 +102,6 @@ FEED_EXPORT_ENCODING = "utf-8"
 #selenium
 from shutil import which
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+#SELENIUM_COMMAND_EXECUTOR = 'http://localhost:4444/wd/hub'
 #SELENIUM_DRIVER_ARGUMENTS = ['-headless']
 

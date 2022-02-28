@@ -4,6 +4,7 @@
 <section class="container menu" >
 	<div class="menu-block" id="{{menu.restaurant.name}}">
 		<p><strong>Today is {% now "l"%}</strong></p>
+		{% if menu.dishes_as_list %}
 		<div class="dish">
 			<p><strong>Main menu:</strong></p>
 			{% for dish in menu.dishes_as_list %}
@@ -11,6 +12,9 @@
 			{% endfor %}
 			<p><strong> Lunch price {{ menu.price }}</strong></p>
 		</div>
+		{% else%}
+		<div> <b> Sorry. menu is not available for today.</b></div>
+		{% endif %}
 		<div class="info">
 			{% for info in menu.additional_info_as_list %}
 			<p><span>{{ info }}</span></p>
